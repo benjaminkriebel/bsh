@@ -393,7 +393,7 @@ void run_shell(void)
  */
 void sigint_handler(int signo)
 {
-	printf("Interrupted!\n");
+    printf("Interrupted!\n");
 }
 
 /**
@@ -407,7 +407,7 @@ void sigint_handler(int signo)
  */
 void sigchld_handler(int signo)
 {
-	while(waitpid(-1, NULL, WNOHANG) > 0);
+    while(waitpid(-1, NULL, WNOHANG) > 0);
 }
 
 /**
@@ -438,7 +438,7 @@ void shell_init(void)
     {
         perror("sigaction");
         exit(EXIT_FAILURE);
-    }
+    }	
 
     num_pipes = 0;
     backgnd = false;
@@ -452,7 +452,7 @@ void shell_init(void)
  */
 int main(void)
 {
-	shell_init();
+    shell_init();
     run_shell();
     return 0;
 }
