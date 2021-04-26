@@ -27,7 +27,6 @@ static bool backgnd;
  */
 char *read_input(void)
 {
-<<<<<<< HEAD
     char *buf = NULL;
     size_t len = 0;
 
@@ -35,18 +34,8 @@ char *read_input(void)
     {
         return NULL;
     }
-=======
-	char *buf = NULL; /* line input buffer */
-    	size_t len = 0;   /* number of bytes to read */
 
-    	/* Read input from the user */
-   	if (getline(&buf, &len, stdin) == -1)
-    	{
-        	return NULL;
-    	}
->>>>>>> 4e6eb8042d2716aeb14d0db9a543f5c88ba837e1
-
-    	return buf;
+    return buf;
 }
 
 /**
@@ -61,7 +50,6 @@ char *read_input(void)
  */
 char **tokenize(char *str)
 {
-<<<<<<< HEAD
     int len = MAX_TOKS;
     char **buf = malloc(len * sizeof(char *));
     if (buf == NULL)
@@ -110,74 +98,9 @@ char **tokenize(char *str)
         }
     }
 
-  buf[pos] = NULL;
+    buf[pos] = NULL;
 
-  return buf;
-=======
-	char **buf;         /* token buffer */
-   	char **temp;        /* temporary buffer for reallocation */
-    	char *tok;          /* current token */
-   	int len = MAX_TOKS; /* length of the buffer */
-    	int i = 0;          /* index variable */
-
-    	/* Allocate space for the token buffer */
-    	buf = malloc(len * sizeof(char *));
-    	if (buf == NULL)
-    	{
-        	perror("malloc");
-        	exit(EXIT_FAILURE);
-    	}
-
-	/* Get the first token */
-	tok = strtok(str, TOK_DELIM);
-
-    	/* Iterate over the string and add each token to the buffer */
-   	while (tok != NULL)
-    	{
-        	buf[i] = tok;
-
-        	/* Check for pipe and background tokens */
-		if (strcmp(tok, "|") == 0)
-        	{
-            		num_pipes++;
-           	 	buf[i] = NULL;
-        	}
-        	else if (strcmp(tok, "&") == 0)
-        	{
-            		backgnd = true;
-            		buf[i] = NULL;
-        	}
-
-		/* Move to the next token */
-		i++;
-		tok = strtok(NULL, TOK_DELIM);
-
-		/* Check if the length of the buffer has been exceeded */
-		if (i < len - 1)
-		{
-		    continue;
-		}
-
-		/* Reallocate the buffer if necessary */
-		len += MAX_TOKS;
-
-		temp = realloc(buf, len * sizeof(char *));
-		if (temp == NULL)
-		{
-		    	perror("realloc");
-		    	exit(EXIT_FAILURE);
-		}
-		else if (buf != temp)
-		{
-            		buf = temp;
-        	}
-    	}
-
-	/* Append a null byte to the end of the buffer */
-	buf[i] = NULL;
-
-	return buf;
->>>>>>> 4e6eb8042d2716aeb14d0db9a543f5c88ba837e1
+    return buf;
 }
 
 /**
@@ -214,7 +137,6 @@ void redirect(char *name, int flags, int dest_fd)
  */
 bool handle_builtins(char **args)
 {
-<<<<<<< HEAD
     if (strcmp(args[0], "cd") == 0)
     {
         int ret;
@@ -278,68 +200,6 @@ bool handle_builtins(char **args)
     }
 
     return true;
-=======
-    	int ret;           /* return status */
-    	int i;             /* index variable */
-    	char str[STR_MAX]; /* input used for setenv */
-
-	/* Check if the command is built-in */
-	if (strcmp(args[0], "cd") == 0)
-	{
-        	/* Change the current working directory */
-        	if (args[0] == NULL)
-       	 	{
-            		ret = chdir(getenv("HOME"));
-        	}
-        	else
-        	{
-            		ret = chdir(args[1]);
-        	}
-
-        	/* Check for errors */
-        	if (ret == -1)
-        	{
-            		perror("cd");
-            		exit(EXIT_FAILURE);
-        	}
-    	}
-    	else if (strcmp(args[0], "printenv") == 0)
-    	{
-        	/* Print the user environment */
-        	for (i = 0; environ[i] != NULL; i++)
-        	{
-            		printf("%s\n", environ[i]);
-        	}
-    	}
-	else if (strcmp(args[0], "setenv") == 0)
-	{
-		/* Set an environment variable */
-		snprintf(str, sizeof(str), "%s=%s", args[1], args[2]);
-		putenv(str);
-	}
-	else if (strcmp(args[0], "unsetenv") == 0)
-	{
-		/* Remove an environment variable */
-		unsetenv(args[1]);
-	}
-	else if (strcmp(args[0], "help") == 0)
-	{
-		/* Display helpful information about the shell */
-		printf("Ben's shell (bsh) is a UNIX-like shell.\n");
-		printf("Usage:\n");
-		printf("cd        change the current working directory\n");
-		printf("printenv  print the user environment\n");
-		printf("setenv    set an environment variable\n");
-		printf("unsetenv  remove an environment variable\n");
-		printf("exit      close the shell\n");
-	}
-	else
-	{
-	   	return false;
-	}
-
-	return true;
->>>>>>> 4e6eb8042d2716aeb14d0db9a543f5c88ba837e1
 }
 
 /**
@@ -353,7 +213,6 @@ bool handle_builtins(char **args)
  */
 void execute(char **args)
 {
-<<<<<<< HEAD
     for (int i = 0; args[i + 1] != NULL; i++)
     {
         if (i != 0 && strcmp(args[i], "<") == 0)
@@ -378,40 +237,6 @@ void execute(char **args)
         perror("fork");
         exit(EXIT_FAILURE);
     }
-=======
-	int i; /* index variable */
-
-    	/* Search the arguments for I/O redirect tokens */
-    	for (i = 0; args[i + 1] != NULL; i++)
-    	{
-        	/* Check for input redirection */
-        	if ((i != 0) && (strcmp(args[i], "<") == 0))
-        	{
-            		redirect(args[i + 1], O_RDONLY, STDIN_FILENO);
-            		args[i] = NULL;
-        	}
-
-        	/* Check for output redirection */
-        	if ((i != 0) && (strcmp(args[i], ">") == 0))
-        	{
-            		redirect(args[i + 1], O_WRONLY | O_APPEND | O_CREAT, STDOUT_FILENO);
-            		args[i] = NULL;
-        	}
-    	}
-
-    	/* Check if the command is built-in */
-    	if (handle_builtins(args) == true)
-    	{
-        	return;
-    	}
-
-    	/* Execute the command */
-    	if (execvp(args[0], args) == -1)
-    	{
-		error("fork");
-		exit(EXIT_FAILURE);
-    	}
->>>>>>> 4e6eb8042d2716aeb14d0db9a543f5c88ba837e1
 }
 
 /**
@@ -425,7 +250,6 @@ void execute(char **args)
  */
 void pipeline(char **args)
 {
-<<<<<<< HEAD
     if (num_pipes == 0)
     {
         execute(args);
@@ -457,49 +281,6 @@ void pipeline(char **args)
         close(pipefd[1]);
         dup2(pipefd[0], STDIN_FILENO);
         close(pipefd[0]);
-=======
-	int pipefd[2]; /* pipe file descriptors */
-	pid_t cpid;    /* process ID of the child */
-	int status;    /* status info for the terminating process */
-
-	/* If there are no more pipes, execute the command */
-	if (num_pipes == 0)
-	{
-		execute(args);
-	}
-
-	/* Create a new pipe */
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		return;
-	}
-
-	/* Fork a child process */
-	cpid = fork();
-	if (cpid == -1)
-	{
-		perror("fork");
-		return;
-	}
-
-	/* Handle parent and child processes */
-	if (cpid == 0)
-	{
-		/* Redirect output to the write end of the pipe */
-        	dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[1]);
-		
-		/* Execute the command */
-		execute(args);
-	}
-	else
-	{
-		/* Redirect input to the read end of the pipe */
-		close(pipefd[1]);
-        	dup2(pipefd[0], STDIN_FILENO);
-        	close(pipefd[0]);
->>>>>>> 4e6eb8042d2716aeb14d0db9a543f5c88ba837e1
 
         waitpid(cpid, NULL, 0);
 
@@ -521,7 +302,6 @@ void pipeline(char **args)
  */
 void launch(char **args)
 {
-<<<<<<< HEAD
     pid_t cpid = fork();
     if (cpid == -1)
     {
@@ -549,42 +329,6 @@ void launch(char **args)
     {
         printf("Background process started with PID: %d\n", cpid);
     }
-=======
-	pid_t cpid; /* process ID of the child */
-    	int status; /* status info for the terminating process */
-
-    	/* Fork a child process */
-    	cpid = fork();
-    	if (cpid == -1)
-    	{
-       		perror("fork");
-        	return;
-    	}
-
-	/* Handle parent and child processes */
-    	if (cpid == 0)
-    	{
-	    	/* Handle pipes if necessary */
-		if (num_pipes != 0)
-		{
-		    pipeline(args);
-		}
-		else
-		{
-		    execute(args);
-		}
-    	}
-
-    	/* Wait for the child process to terminate */
-    	if (backgnd == false)
-    	{
-       		waitpid(cpid, &status, 0);
-    	}
-    	else
-    	{
-        	printf("Background process started with PID: %d\n", cpid);
-    	}
->>>>>>> 4e6eb8042d2716aeb14d0db9a543f5c88ba837e1
 }
 
 /**
@@ -600,21 +344,11 @@ void launch(char **args)
  */
 void cleanup(char *line, char **toks)
 {
-<<<<<<< HEAD
     free(line);
     free(toks);
 
     num_pipes = 0;
     backgnd = false;
-=======
-	/* Free allocated memory */
-	free(line);
-	free(toks);
-
-	/* Reset global variables */
-	num_pipes = 0;
-	backgnd = false;
->>>>>>> 4e6eb8042d2716aeb14d0db9a543f5c88ba837e1
 }
 
 /**
@@ -625,7 +359,6 @@ void cleanup(char *line, char **toks)
  */
 void run_shell(void)
 {
-<<<<<<< HEAD
     printf("Welcome to Ben's Shell (bsh).\n");
     printf("Type 'help' for more information.\n");
     
@@ -647,36 +380,6 @@ void run_shell(void)
 
         cleanup(line, toks);
     }
-=======
-	char *line;  /* line input buffer */
-   	char **toks; /* token buffer */
-
-    	while (true)
-    	{
-        	/* Display the shell prompt */
-        	printf("$ ");
-
-        	/* Read a command */
-        	line = read_input();
-
-        	/* Parse the command into tokens */
-        	toks = tokenize(line);
-
-        	/* Handle the exit command */
-        	if (strcmp(toks[0], "exit") == 0)
-        	{
-           		printf("Goodbye!\n");
-            		cleanup(line, toks);
-            		exit(EXIT_SUCCESS);
-        	}
-
-        	/* Launch the command */
-		launch(toks);
-
-        	/* Handle cleanup */
-        	cleanup(line, toks);
-    	}
->>>>>>> 4e6eb8042d2716aeb14d0db9a543f5c88ba837e1
 }
 
 /**
@@ -715,7 +418,6 @@ void sigchld_handler(int signo)
  */
 void shell_init(void)
 {
-<<<<<<< HEAD
     struct sigaction sa_sigint;
     sa_sigint.sa_handler = sigint_handler;
     sigemptyset(&sa_sigint.sa_mask);
@@ -740,40 +442,6 @@ void shell_init(void)
 
     num_pipes = 0;
     backgnd = false;
-=======
-	struct sigaction sa_sigint;  /* Sigaction structure for SIGINT */
-    	struct sigaction sa_sigchld; /* Sigaction structure for SIGCHLD */
-
-    	/* Set up the SIGINT signal handler */
-    	sa_sigint.sa_handler = sigint_handler;
-    	sigemptyset(&sa_sigint.sa_mask);
-    	sa_sigint.sa_flags = SA_RESTART;
-
-    	if (sigaction(SIGINT, &sa_sigint, NULL) == -1)
-    	{
-        	perror("sigaction");
-        	exit(EXIT_FAILURE);
-    	}
-
-    	/* Set up the SIGCHLD signal handler */
-    	sa_sigchld.sa_handler = sigchld_handler;
-    	sigemptyset(&sa_sigchld.sa_mask);
-    	sa_sigchld.sa_flags = SA_RESTART;
-
-    	if (sigaction(SIGCHLD, &sa_sigchld, NULL) == -1)
-    	{
-        	perror("sigaction");
-        	exit(EXIT_FAILURE);
-    	}
-
-	/* Initialize global variables */
-	num_pipes = 0;
-	backgnd = false;
-
-    	/* Display the welcome message */
-    	printf("Welcome to Ben's Shell (bsh).\n");
-    	printf("Enter 'help' for more information.\n");
->>>>>>> 4e6eb8042d2716aeb14d0db9a543f5c88ba837e1
 }
 
 /**
@@ -785,6 +453,6 @@ void shell_init(void)
 int main(void)
 {
 	shell_init();
-    	run_shell();
-    	return 0;
+    run_shell();
+    return 0;
 }
